@@ -1,0 +1,56 @@
+{% extends "myblog/template.html" %}
+
+{% block category %}
+<div class="ui labels">
+  <a class="ui basic label" href="{% url 'index' %}"> All </a> 
+  {% for category in categorys %}
+    {% if category.id == category_id %}
+    <a class="ui label pointing below" href="{% url 'list' category.id %}"> {{category.name}} </a>
+    {% else %}
+    <a class="ui basic label" href="{% url 'list' category.id %}"> {{category.name}} </a>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block content %}
+<h1 class="ui dividing header">{{ article.title }}</h1>
+<pre> {{ article.content }} </pre>
+
+<div class="ui comments">
+  <h3 class="ui dividing header">Comments</h3>
+  {% for feed in feeds %}
+  <div class="comment">
+    <div class="content">
+      <a class="author">{{ feed.writer }}</a>
+      <div class="metadata">
+        <span class="date">{{ feed.created }}</span>
+      </div>
+      <div class="text">
+        {{ feed.content }}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  <form class="ui reply form" action="{% url 'feed' article.id %}" method="POST">
+    {% csrf_token %}
+    <div class="ui grid">
+        <div class="four wide column">
+            <div class="ui mini input">
+                <input type="text" name="writer" placeholder="Name">
+            </div>
+        </div>
+        <div class="twelve wide column">
+            <div class="ui fluid input">
+                <input type="text" name="content" placeholder=" input...">
+            </div>
+        </div>
+    </div>  
+    <div>
+        <input type="submit" value="Add Reply" />
+    </div>
+  </form>
+</div>
+
+{% endblock %}

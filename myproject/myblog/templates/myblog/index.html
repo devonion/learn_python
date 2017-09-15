@@ -1,0 +1,23 @@
+{% extends "myblog/template.html" %}
+
+{% block category %}
+<div class="ui labels">
+  <a class="ui label pointing below" href="{% url 'index' %}"> All </a>
+  {% for category in categorys %}
+  <a class="ui basic label" href="{% url 'list' category.id %}"> {{category.name}} </a>
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block content %}
+
+  {% for key, value in context.items %}
+    <h2 class="ui grey dividing header"> {{ key }} </h2>
+    {% for article in value %}
+      <h3 class="ui header"><a href="{% url 'detail' article.id %}"> {{ article.title }} </a>
+        <div class="sub header">{{ article.created|date:'Y-m-d' }}</div>
+      </h3>  
+    {% endfor %}
+  {% endfor %}
+
+{% endblock %}

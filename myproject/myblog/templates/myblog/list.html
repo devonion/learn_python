@@ -1,0 +1,47 @@
+{% extends "myblog/template.html" %}
+
+{% block category %}
+<div class="ui labels">
+  <a class="ui basic label" href="{% url 'index' %}"> All </a> 
+  {% for category in categorys %}
+    {% if category.id|stringformat:"s" == category_id %}
+    <a class="ui label pointing below" href="{% url 'list' category.id %}"> {{category.name}} </a>
+    {% else %}
+    <a class="ui basic label" href="{% url 'list' category.id %}"> {{category.name}} </a>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}
+
+{% block content %}
+    {% for article in articles %}
+      <h3 class="ui header"> <a href="{% url 'detail' article.id %}">{{ article.title }}</a>
+        <div class="sub header">{{ article.created|date:'Y-m-d' }}</div>
+      </h3>  
+    {% endfor %}
+
+    {% if articles.has_other_pages %}
+    <div class="mini basic ui buttons">
+        {% if articles.has_previous %}
+        <button class="ui button"><a href="?page={{ articles.previous_page_number }}"><i class="angle double left icon"></i></a></button>
+        {% else %}
+        <button class="ui button disabled"><i class="angle double left icon"></i></button>
+        {% endif %}
+
+        {% for i in articles.paginator.page_range %}
+        {% if articles.number == i %}
+            <button class="ui button active">{{ i }}</button>
+        {% else %}
+            <button class="ui button"><a href="?page={{ i }}">{{ i }}</a></button>
+        {% endif %}
+        {% endfor %}
+
+        {% if articles.has_next %}
+        <button class="ui button"><a href="?page={{ articles.next_page_number }}"><i class="angle double right icon"></i></a></button>
+        {% else %}
+        <button class="ui button disabled"><i class="angle double right icon"></i></button>
+        {% endif %}
+    </div>
+    {% endif %}
+
+{% endblock %}
